@@ -1,0 +1,256 @@
+{% extends "base.html" %}
+
+{% block title %}About the Project | ResNet9-SE Architecture & Research{% endblock %}
+
+{% block content %}
+<div class="about-page-wrapper">
+    <div class="container">
+        
+        <!-- Header Section -->
+        <div class="page-header text-center">
+            <span class="sub-heading">Academic Mini Project Overview</span>
+            <h1 class="page-title">
+                Explainable & Environment-Aware Strawberry Disease Detection
+            </h1>
+            <p class="page-lead">
+                An Enhanced <strong>ResNet9-SE Framework</strong> integrating Squeeze-and-Excitation channel attention, Gradient-weighted Class Activation Mapping (Grad-CAM), and microclimate disease risk modelling.
+            </p>
+        </div>
+
+        <!-- Section 1: Project Objective & Problem Statement -->
+        <div class="about-card mt-4">
+            <div class="about-card-badge">Section 01</div>
+            <h2 class="about-heading">Problem Statement & Objective</h2>
+            <div class="about-grid-2">
+                <div>
+                    <h4 class="sub-title">The Agricultural Challenge</h4>
+                    <p>
+                        Strawberry crops (<em>Fragaria &times; ananassa</em>) are highly vulnerable to foliar fungal and bacterial pathogens such as Leaf Scorch (<em>Diplocarpon earlianum</em>), Powdery Mildew (<em>Podosphaera aphanis</em>), and Angular Leaf Spot (<em>Xanthomonas fragariae</em>). 
+                        Left unchecked, these pathogens ravage photosynthesizing leaf area, defoliate crowns, and trigger severe yield losses exceeding 40&ndash;65%.
+                    </p>
+                    <p>
+                        Current farming workflows rely heavily on subjective visual scouting and broad-spectrum chemical sprays applied prophylactically. 
+                        This increases input costs, fosters chemical pathogen resistance, and contaminates agricultural runoff.
+                    </p>
+                </div>
+                <div>
+                    <h4 class="sub-title">Our Solution & Research Objectives</h4>
+                    <p>
+                        This research introduces an integrated digital diagnostic platform engineered to:
+                    </p>
+                    <ul class="styled-list">
+                        <li><strong>Deploy an Enhanced ResNet9-SE:</strong> A high-throughput, low-parameter deep residual neural network optimized for fast inference on resource-constrained agricultural edge devices.</li>
+                        <li><strong>Incorporate SE Attention:</strong> Squeeze-and-Excitation blocks dynamically recalibrate channel feature weights, sharpening model sensitivity to fine-grained foliar lesions.</li>
+                        <li><strong>Deliver Visual Explainability:</strong> Grad-CAM heatmaps generate visual accountability, assuring agronomists and farmers of why a prediction was made.</li>
+                        <li><strong>Correlate Environmental Telemetry:</strong> Microclimate temperature and humidity sensors (via ESP32 + DHT22) inform disease risk assessment before irreversible sporulation takes hold.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: ResNet9-SE Architecture Deep Dive -->
+        <div class="about-card mt-4">
+            <div class="about-card-badge">Section 02</div>
+            <h2 class="about-heading">Enhanced ResNet9-SE Architecture</h2>
+            <p>
+                Standard deep architectures like ResNet-50 and DenseNet-121 contain tens of millions of parameters, requiring heavy GPU hardware that is impractical for edge IoT deployment in rural field conditions. 
+                Our enhanced framework builds upon a compact 9-layer residual architecture enhanced with channel-wise Squeeze-and-Excitation (SE) attention blocks.
+            </p>
+
+            <!-- Architecture Flowchart / Diagram Representation -->
+            <div class="arch-flow-diagram mt-4">
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <span class="flow-title">Input Stage</span>
+                        <span class="flow-detail">3 &times; 224 &times; 224 RGB Leaf</span>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <span class="flow-title">Prep Block</span>
+                        <span class="flow-detail">Conv 3 &rarr; 64, BN, ReLU</span>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-box highlight-box">
+                        <span class="flow-title">Stage 1 + SE Block</span>
+                        <span class="flow-detail">Conv 128 + Res(128) &bull; SE Attention</span>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <span class="flow-title">Stage 2</span>
+                        <span class="flow-detail">Conv 128 &rarr; 256, MaxPool</span>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-box highlight-box">
+                        <span class="flow-title">Stage 3 + SE Block</span>
+                        <span class="flow-detail">Conv 512 + Res(512) &bull; SE Attention</span>
+                    </div>
+                    <div class="flow-arrow">&rarr;</div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="flow-box">
+                        <span class="flow-title">Classifier Head</span>
+                        <span class="flow-detail">AdaptivePool &bull; Linear(512 &rarr; 4)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mathematical Explanation of Squeeze-and-Excitation -->
+            <div class="math-se-card mt-4">
+                <h4 class="sub-title">Squeeze-and-Excitation (SE) Attention Mechanism</h4>
+                <p>
+                    The SE block models non-linear cross-channel relationships through two consecutive operations:
+                </p>
+                <div class="se-ops-grid">
+                    <div class="se-op">
+                        <strong>1. Squeeze (Spatial Global Average Pooling):</strong>
+                        <p>Aggregates spatial dimensions \(H \times W\) into a channel descriptor vector \(z \in \mathbb{R}^C\) via:</p>
+                        <div class="formula-box">
+                            <code>z_c = (1 / (H &times; W)) &sum; &sum; u_c(i, j)</code>
+                        </div>
+                    </div>
+                    <div class="se-op">
+                        <strong>2. Excitation (Adaptive Channel Recalibration):</strong>
+                        <p>Captures channel-wise dependencies using two fully connected layers around a reduction ratio \(r=16\):</p>
+                        <div class="formula-box">
+                            <code>s = &sigma;(W_2 &bull; &delta;(W_1 &bull; z))</code>
+                        </div>
+                    </div>
+                </div>
+                <p class="mt-2 text-muted-custom">
+                    The resulting activation vector \(s\) rescales the original feature maps, enabling the network to selectively emphasize necrotic disease channels over plain leaf background.
+                </p>
+            </div>
+        </div>
+
+        <!-- Section 3: Model Comparison Table -->
+        <div class="about-card mt-4">
+            <div class="about-card-badge">Section 03</div>
+            <h2 class="about-heading">Comparative Benchmark Framework</h2>
+            <p>
+                Our planned evaluation benchmarks the Enhanced ResNet9-SE against popular edge vision baselines on accuracy, parameter footprint, and inference latency on edge hardware.
+            </p>
+
+            <div class="table-responsive mt-3">
+                <table class="benchmark-table">
+                    <thead>
+                        <tr>
+                            <th>Model Architecture</th>
+                            <th>Trainable Params</th>
+                            <th>FLOPs (approx)</th>
+                            <th>Inference Latency (Edge)</th>
+                            <th>Interpretability Suitability</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td><strong>Enhanced ResNet9-SE (Proposed)</strong></td>
+                            <td><strong>~6.57 M</strong></td>
+                            <td><strong>~0.92 G</strong></td>
+                            <td><strong>~18 ms</strong></td>
+                            <td><strong>High (Clean Conv Feature Maps)</strong></td>
+                        </tr>
+                        <tr>
+                            <td>MobileNetV3-Small</td>
+                            <td>~2.54 M</td>
+                            <td>~0.06 G</td>
+                            <td>~14 ms</td>
+                            <td>Moderate (Depthwise Separable)</td>
+                        </tr>
+                        <tr>
+                            <td>EfficientNet-B0</td>
+                            <td>~5.29 M</td>
+                            <td>~0.39 G</td>
+                            <td>~26 ms</td>
+                            <td>Moderate (Complex MBConv)</td>
+                        </tr>
+                        <tr>
+                            <td>Standard ResNet-50</td>
+                            <td>~25.56 M</td>
+                            <td>~4.12 G</td>
+                            <td>~72 ms</td>
+                            <td>High (High compute overhead)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Section 4: Explainable AI with Grad-CAM -->
+        <div class="about-card mt-4">
+            <div class="about-card-badge">Section 04</div>
+            <h2 class="about-heading">Explainable AI (XAI) via Grad-CAM</h2>
+            <p>
+                Black-box deep neural networks frequently fail to earn farmer trust because the user cannot verify whether a classification was made based on actual pathogen symptoms or extraneous background artifacts (such as soil, mulch, or water drops).
+            </p>
+            <div class="xai-explanation-grid mt-3">
+                <div class="xai-step-box">
+                    <div class="step-num-pill">1</div>
+                    <h4>Forward Pass</h4>
+                    <p>Leaf image passes through ResNet9-SE to generate class prediction logits.</p>
+                </div>
+                <div class="xai-step-box">
+                    <div class="step-num-pill">2</div>
+                    <h4>Gradient Computation</h4>
+                    <p>Backpropagates class score gradients back to the Stage 3 residual convolution layer.</p>
+                </div>
+                <div class="xai-step-box">
+                    <div class="step-num-pill">3</div>
+                    <h4>Global Pooling Weights</h4>
+                    <p>Computes alpha neuron importance weights for each of the 512 feature maps.</p>
+                </div>
+                <div class="xai-step-box">
+                    <div class="step-num-pill">4</div>
+                    <h4>Heatmap Generation</h4>
+                    <p>Applies ReLU to retain positively contributing features and upsamples to 224&times;224.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 5: Alignment with UN Sustainable Development Goal 2 -->
+        <div class="about-card mt-4 mb-5">
+            <div class="about-card-badge">Section 05</div>
+            <div class="sdg-split-header">
+                <div>
+                    <h2 class="about-heading">Contribution Towards UN SDG 2: Zero Hunger</h2>
+                    <p>Target 2.4: Sustainable Food Production and Resilient Agricultural Practices.</p>
+                </div>
+                <div class="sdg-large-icon">
+                    <span>SDG 2</span>
+                </div>
+            </div>
+
+            <div class="sdg-grid-points mt-3">
+                <div class="sdg-point-card">
+                    <div class="point-icon">&check;</div>
+                    <h4>Crop Loss Reduction</h4>
+                    <p>Early identification of leaf scorch and angular leaf spot prevents epidemic fungal spread, securing grower harvests.</p>
+                </div>
+                <div class="sdg-point-card">
+                    <div class="point-icon">&check;</div>
+                    <h4>Precision Chemical Stewardship</h4>
+                    <p>Grad-CAM and microclimate data eliminate blind blanket fungicide applications, preserving topsoil and groundwater quality.</p>
+                </div>
+                <div class="sdg-point-card">
+                    <div class="point-icon">&check;</div>
+                    <h4>Democratizing Agronomy</h4>
+                    <p>Puts expert plant pathology tools directly into the hands of smallholder farmers without requiring costly lab tests.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

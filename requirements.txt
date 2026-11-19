@@ -1,0 +1,11 @@
+# Core Web Application Dependencies
+Flask>=3.0.0
+Pillow>=10.0.0
+Werkzeug>=3.0.0
+
+# Future Machine Learning, Computer Vision & Explainability Dependencies
+# (Install these when ready to train or deploy your PyTorch ResNet9-SE model)
+# torch>=2.0.0
+# torchvision>=0.15.0
+# opencv-python>=4.8.0
+# numpy>=1.24.0

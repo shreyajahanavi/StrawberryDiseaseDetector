@@ -1,0 +1,421 @@
+{% extends "base.html" %}
+
+{% block title %}BerryGuard AI | Explainable Strawberry Disease Detection{% endblock %}
+
+{% block content %}
+<!-- HERO SECTION -->
+<section class="hero-section">
+    <div class="hero-bg-overlay"></div>
+    <div class="hero-leaf-pattern"></div>
+    <div class="container hero-container">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    <span class="badge-dot"></span>
+                    <span class="badge-text">Next-Gen Agricultural Computer Vision</span>
+                </div>
+                
+                <h1 class="hero-title">
+                    Explainable & Environment-Aware 
+                    <span class="text-gradient">Strawberry Disease Detection</span>
+                </h1>
+                
+                <p class="hero-lead">
+                    Powered by an <strong>Enhanced ResNet9-SE Framework</strong> with Squeeze-and-Excitation channel attention, Grad-CAM visual interpretability, and real-time microclimate risk correlation for strawberry growers.
+                </p>
+
+                <div class="hero-actions">
+                    <a href="{{ url_for('detect_page') }}" class="btn btn-primary btn-lg pulse-glow">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <span>Detect Foliage Disease</span>
+                    </a>
+                    <a href="{{ url_for('about_page') }}" class="btn btn-outline btn-lg">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="16" x2="12" y2="12"/>
+                            <line x1="12" y1="8" x2="12.01" y2="8"/>
+                        </svg>
+                        <span>Explore Research</span>
+                    </a>
+                </div>
+
+                <!-- Live Model Architecture Status Pill -->
+                <div class="hero-meta-strip">
+                    <div class="meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52b788" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                        <span>ResNet9-SE Architecture Ready</span>
+                    </div>
+                    <div class="meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52b788" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                        <span>Grad-CAM Explainable AI</span>
+                    </div>
+                    <div class="meta-item">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52b788" stroke-width="2">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                        <span>DHT22 IoT Microclimate Fusion</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Visual Card -->
+            <div class="hero-visual">
+                <div class="hero-card-glow"></div>
+                <div class="hero-visual-card">
+                    <div class="visual-card-header">
+                        <div class="card-dots">
+                            <span class="dot dot-red"></span>
+                            <span class="dot dot-amber"></span>
+                            <span class="dot dot-green"></span>
+                        </div>
+                        <div class="card-status-pill">
+                            <span class="status-indicator"></span> ResNet9-SE Engine Active
+                        </div>
+                    </div>
+
+                    <div class="interactive-hero-display">
+                        <!-- Dual Comparison Graphic -->
+                        <div class="hero-leaf-preview">
+                            <div class="preview-side">
+                                <span class="side-tag">Input Strawberry Foliage</span>
+                                <div class="leaf-mockup leaf-original">
+                                    <svg viewBox="0 0 200 200" class="leaf-illustration">
+                                        <!-- Leaf Stem -->
+                                        <path d="M100 180 Q100 120 100 40" stroke="#2d6a4f" stroke-width="4" fill="none"/>
+                                        <!-- Left Leaflet -->
+                                        <path d="M100 130 C40 120 20 80 40 50 C60 20 95 60 100 100 Z" fill="#40916c" opacity="0.9"/>
+                                        <!-- Center Leaflet with Serrated Edges -->
+                                        <path d="M100 100 C70 60 70 20 100 10 C130 20 130 60 100 100 Z" fill="#2d6a4f"/>
+                                        <!-- Right Leaflet -->
+                                        <path d="M100 130 C160 120 180 80 160 50 C140 20 105 60 100 100 Z" fill="#40916c" opacity="0.9"/>
+                                        <!-- Characteristic Leaf Spots (Lesions) -->
+                                        <circle cx="95" cy="45" r="4" fill="#6b1d1d"/>
+                                        <circle cx="108" cy="65" r="5" fill="#781d1d"/>
+                                        <circle cx="60" cy="70" r="4.5" fill="#581616"/>
+                                        <circle cx="140" cy="75" r="4" fill="#6b1d1d"/>
+                                    </svg>
+                                </div>
+                            </div>
+
+                            <div class="preview-divider">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </div>
+
+                            <div class="preview-side">
+                                <span class="side-tag tag-xai">Grad-CAM Heatmap</span>
+                                <div class="leaf-mockup leaf-heatmap">
+                                    <svg viewBox="0 0 200 200" class="leaf-illustration">
+                                        <!-- Heatmap background mask -->
+                                        <path d="M100 130 C40 120 20 80 40 50 C60 20 95 60 100 100 Z" fill="#1b4332" opacity="0.8"/>
+                                        <path d="M100 100 C70 60 70 20 100 10 C130 20 130 60 100 100 Z" fill="#1b4332" opacity="0.9"/>
+                                        <path d="M100 130 C160 120 180 80 160 50 C140 20 105 60 100 100 Z" fill="#1b4332" opacity="0.8"/>
+                                        <!-- Heatmap Glowing Hotspots (Jet Colormap Simulation) -->
+                                        <circle cx="95" cy="45" r="16" fill="url(#gradRed)" opacity="0.85"/>
+                                        <circle cx="108" cy="65" r="20" fill="url(#gradRed)" opacity="0.9"/>
+                                        <circle cx="60" cy="70" r="18" fill="url(#gradAmber)" opacity="0.8"/>
+                                        <circle cx="140" cy="75" r="15" fill="url(#gradAmber)" opacity="0.75"/>
+                                        
+                                        <defs>
+                                            <radialGradient id="gradRed">
+                                                <stop offset="0%" stop-color="#ff0000" stop-opacity="1"/>
+                                                <stop offset="60%" stop-color="#ff9900" stop-opacity="0.8"/>
+                                                <stop offset="100%" stop-color="#0066ff" stop-opacity="0"/>
+                                            </radialGradient>
+                                            <radialGradient id="gradAmber">
+                                                <stop offset="0%" stop-color="#ff6600" stop-opacity="1"/>
+                                                <stop offset="70%" stop-color="#ffcc00" stop-opacity="0.7"/>
+                                                <stop offset="100%" stop-color="#0066ff" stop-opacity="0"/>
+                                            </radialGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mini Analysis Card -->
+                        <div class="hero-metric-box">
+                            <div class="metric-row">
+                                <span class="metric-label">Target Architecture</span>
+                                <span class="metric-val text-accent">ResNet9-SE (PyTorch)</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Attention Mechanism</span>
+                                <span class="metric-val">Squeeze-and-Excitation (SE)</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Explainability Mode</span>
+                                <span class="metric-val">Grad-CAM Feature Maps</span>
+                            </div>
+                            <div class="metric-row">
+                                <span class="metric-label">Integration State</span>
+                                <span class="metric-status-badge">Backend Ready &bull; Model Awaited</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- STATS STRIP -->
+<section class="stats-strip">
+    <div class="container stats-container">
+        <div class="stat-card">
+            <span class="stat-number">4</span>
+            <span class="stat-title">Foliar Target Classes</span>
+            <span class="stat-desc">Healthy, Leaf Scorch, Mildew, Angular Spot</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+            <span class="stat-number">9-Layer</span>
+            <span class="stat-title">Residual SE Network</span>
+            <span class="stat-desc">Lightweight edge & mobile deployment</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+            <span class="stat-number">XAI</span>
+            <span class="stat-title">Grad-CAM Visual Explanations</span>
+            <span class="stat-desc">Farmer interpretability & trust</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-card">
+            <span class="stat-number">IoT</span>
+            <span class="stat-title">Microclimate Triangulation</span>
+            <span class="stat-desc">Temp & Humidity Risk Modelling</span>
+        </div>
+    </div>
+</section>
+
+<!-- HOW IT WORKS SECTION -->
+<section class="section how-it-works-section">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="sub-heading">End-to-End Pipeline</span>
+            <h2 class="section-title">How the System Works</h2>
+            <p class="section-lead">
+                A seamless four-tier architectural workflow designed for agricultural field conditions and rapid disease mitigation.
+            </p>
+        </div>
+
+        <div class="pipeline-grid">
+            <!-- Step 1 -->
+            <div class="pipeline-card">
+                <div class="step-badge">Step 01</div>
+                <div class="card-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                        <circle cx="12" cy="13" r="4"/>
+                    </svg>
+                </div>
+                <h3 class="pipeline-title">Leaf Image Acquisition</h3>
+                <p class="pipeline-text">
+                    Farmers upload a leaf photo or capture a live macro image directly in the field using their smartphone camera or tablet browser.
+                </p>
+                <div class="pipeline-feature-tag">Drag-and-Drop & WebRTC Camera</div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="pipeline-card">
+                <div class="step-badge">Step 02</div>
+                <div class="card-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 2 7 12 12 22 7 12 2"/>
+                        <polyline points="2 17 12 22 22 17"/>
+                        <polyline points="2 12 12 17 22 12"/>
+                    </svg>
+                </div>
+                <h3 class="pipeline-title">Enhanced ResNet9-SE</h3>
+                <p class="pipeline-text">
+                    The leaf image is normalized to 224&times;224 and processed through residual blocks enhanced with Squeeze-and-Excitation attention to prioritize crucial pathogen channels.
+                </p>
+                <div class="pipeline-feature-tag">Squeeze-and-Excitation Attention</div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="pipeline-card">
+                <div class="step-badge">Step 03</div>
+                <div class="card-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <circle cx="12" cy="12" r="6"/>
+                        <circle cx="12" cy="12" r="2"/>
+                    </svg>
+                </div>
+                <h3 class="pipeline-title">Grad-CAM Explainability</h3>
+                <p class="pipeline-text">
+                    Gradients from the final residual convolutional layer generate a thermal activation heatmap, visually proving to farmers which leaf lesions dictated the diagnosis.
+                </p>
+                <div class="pipeline-feature-tag">Explainable AI (XAI)</div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="pipeline-card">
+                <div class="step-badge">Step 04</div>
+                <div class="card-icon-wrap">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                    </svg>
+                </div>
+                <h3 class="pipeline-title">Environmental Risk Fusion</h3>
+                <p class="pipeline-text">
+                    Microclimate temperature and relative humidity telemetry (via ESP32 + DHT22) is evaluated against pathogen proliferation curves to provide actionable advisory.
+                </p>
+                <div class="pipeline-feature-tag">IoT Telemetry & Risk Matrix</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TARGET DISEASES CATALOG -->
+<section class="section diseases-section">
+    <div class="container">
+        <div class="section-header text-center">
+            <span class="sub-heading">Pathological Taxonomy</span>
+            <h2 class="section-title">Diseases the System Aims to Detect</h2>
+            <p class="section-lead">
+                Comprehensive identification of foliar threats affecting commercial strawberry (<em>Fragaria &times; ananassa</em>) production.
+            </p>
+        </div>
+
+        <div class="disease-grid">
+            <!-- Healthy -->
+            <div class="disease-card">
+                <div class="disease-card-header">
+                    <span class="badge badge-success">Target Class 0</span>
+                    <span class="pathogen-pill pathogen-clean">Healthy Foliage</span>
+                </div>
+                <h3 class="disease-name">Healthy Strawberry Leaf</h3>
+                <div class="scientific-name">Fragaria &times; ananassa</div>
+                <p class="disease-desc">
+                    Vigorous, unblemished trifoliate leaves with vibrant chlorophyll distribution, intact margins, and robust vascular structure free from lesions or discoloration.
+                </p>
+                <div class="disease-key-symptom">
+                    <strong>Visual Indicators:</strong> Uniform deep emerald green, no necrosis, intact foliar cuticle.
+                </div>
+                <div class="disease-footer">
+                    <a href="{{ url_for('results_page', class='Healthy') }}" class="btn-link">
+                        Preview Diagnosis Layout &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Leaf Scorch -->
+            <div class="disease-card">
+                <div class="disease-card-header">
+                    <span class="badge badge-danger">Target Class 1</span>
+                    <span class="pathogen-pill pathogen-fungus">Fungal Pathogen</span>
+                </div>
+                <h3 class="disease-name">Leaf Scorch</h3>
+                <div class="scientific-name">Diplocarpon earlianum</div>
+                <p class="disease-desc">
+                    Irregular purplish-brown lesions without white centers. In advanced stages, spots coalesce causing entire leaflets to curl upward and appear scorched or blighted.
+                </p>
+                <div class="disease-key-symptom">
+                    <strong>Visual Indicators:</strong> Small purple flecks enlarging into dark necrotic patches across upper leaf lamina.
+                </div>
+                <div class="disease-footer">
+                    <a href="{{ url_for('results_page', class='Leaf Scorch') }}" class="btn-link">
+                        Preview Diagnosis Layout &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Powdery Mildew -->
+            <div class="disease-card">
+                <div class="disease-card-header">
+                    <span class="badge badge-warning">Target Class 2</span>
+                    <span class="pathogen-pill pathogen-fungus">Fungal Pathogen</span>
+                </div>
+                <h3 class="disease-name">Powdery Mildew</h3>
+                <div class="scientific-name">Podosphaera aphanis</div>
+                <p class="disease-desc">
+                    Superficial white powdery fungal mycelium spreading across the underside of leaves, causing characteristic upward curling of leaflet edges and reddish-bronze foliar spots.
+                </p>
+                <div class="disease-key-symptom">
+                    <strong>Visual Indicators:</strong> White powdery talc-like patches on abaxial surface, upward cupping of leaves.
+                </div>
+                <div class="disease-footer">
+                    <a href="{{ url_for('results_page', class='Powdery Mildew') }}" class="btn-link">
+                        Preview Diagnosis Layout &rarr;
+                    </a>
+                </div>
+            </div>
+
+            <!-- Angular Leaf Spot -->
+            <div class="disease-card">
+                <div class="disease-card-header">
+                    <span class="badge badge-danger">Target Class 3</span>
+                    <span class="pathogen-pill pathogen-bacteria">Bacterial Pathogen</span>
+                </div>
+                <h3 class="disease-name">Angular Leaf Spot</h3>
+                <div class="scientific-name">Xanthomonas fragariae</div>
+                <p class="disease-desc">
+                    Major quarantine bacterial pathogen. Creates distinctive water-soaked lesions strictly delimited by veinlets. Translucent under backlighting with bacterial ooze when wet.
+                </p>
+                <div class="disease-key-symptom">
+                    <strong>Visual Indicators:</strong> Geometric angular lesions bordered by veins; translucent when held against sunlight.
+                </div>
+                <div class="disease-footer">
+                    <a href="{{ url_for('results_page', class='Angular Leaf Spot') }}" class="btn-link">
+                        Preview Diagnosis Layout &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-center-wrap text-center mt-5">
+            <a href="{{ url_for('detect_page') }}" class="btn btn-primary btn-lg">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span>Upload a Leaf Photo to Test the Interface</span>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- SDG 2 & RESEARCH IMPACT SECTION -->
+<section class="section sdg-section">
+    <div class="container">
+        <div class="sdg-banner-card">
+            <div class="sdg-badge-large">
+                <span class="sdg-num">2</span>
+                <span class="sdg-title">Zero Hunger</span>
+            </div>
+            <div class="sdg-banner-content">
+                <span class="sub-heading text-light">Global Sustainable Development Goals</span>
+                <h2 class="sdg-heading">Protecting Yields & Reducing Fungicide Waste</h2>
+                <p class="sdg-description">
+                    Strawberries are among the most chemically treated high-value crops worldwide. By providing early, explainable diagnosis and microclimate disease tracking, this project empowers farmers to apply precision treatments only when biologically necessary — safeguarding rural livelihoods and advancing UN SDG Target 2.4 for sustainable food production.
+                </p>
+                <div class="sdg-features-row">
+                    <div class="sdg-feat">
+                        <span class="feat-check">&check;</span>
+                        <span>Prevent blind prophylactic chemical spraying</span>
+                    </div>
+                    <div class="sdg-feat">
+                        <span class="feat-check">&check;</span>
+                        <span>Lightweight architecture for rural offline deployment</span>
+                    </div>
+                    <div class="sdg-feat">
+                        <span class="feat-check">&check;</span>
+                        <span>Transparent Grad-CAM visual verification</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

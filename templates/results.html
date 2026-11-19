@@ -1,0 +1,251 @@
+{% extends "base.html" %}
+
+{% block title %}Diagnosis Results Preview | BerryGuard AI{% endblock %}
+
+{% block content %}
+<div class="results-page-wrapper">
+    <div class="container">
+        
+        <!-- Architectural Integration Notice Banner -->
+        <div class="integration-notice-card">
+            <div class="notice-badge">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="16" x2="12" y2="12"/>
+                    <line x1="12" y1="8" x2="12.01" y2="8"/>
+                </svg>
+                <span>Pipeline Architecture Prepared</span>
+            </div>
+            <div class="notice-body">
+                <h4>Results Interface Prepared for Future ResNet9-SE Integration</h4>
+                <p>
+                    This results portal is built to display predictions from your trained <strong>Enhanced ResNet9-SE</strong> model and <strong>Grad-CAM</strong> heatmaps once the model checkpoint is placed in <code>model/weights/</code>. 
+                    Use the class preview selector below to inspect the complete diagnostic report layout, probability distribution, and agronomic advisories.
+                </p>
+            </div>
+            <!-- Interactive Class Selector for Evaluator Demonstration -->
+            <div class="class-selector-strip">
+                <span class="selector-label">Inspect Diagnosis Layout:</span>
+                <div class="selector-buttons">
+                    {% for c in classes %}
+                    <a href="{{ url_for('results_page', class=c, file=filename) }}" 
+                       class="btn-chip {% if disease_key == c %}active{% endif %}">
+                        {{ c }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Diagnosis Grid -->
+        <div class="results-main-grid mt-4">
+            
+            <!-- Left Column: Image & Grad-CAM Heatmap Comparison -->
+            <div class="results-card">
+                <div class="results-card-header">
+                    <h3 class="card-headline">Explainable AI (XAI) Visualisation</h3>
+                    <span class="xai-chip">Grad-CAM Activation Map</span>
+                </div>
+
+                <div class="xai-comparison-container">
+                    <div class="xai-views-grid">
+                        
+                        <!-- Original Leaf Image -->
+                        <div class="xai-view-box">
+                            <span class="xai-view-tag">Input Strawberry Foliage</span>
+                            <div class="xai-img-wrapper">
+                                {% if image_url %}
+                                    <img src="{{ image_url }}" alt="Uploaded leaf" class="xai-img">
+                                {% else %}
+                                    <!-- Fallback Sample Graphic -->
+                                    <div class="sample-leaf-graphic">
+                                        <svg viewBox="0 0 200 200" class="graphic-svg">
+                                            <path d="M100 180 Q100 120 100 40" stroke="#2d6a4f" stroke-width="4" fill="none"/>
+                                            <path d="M100 130 C40 120 20 80 40 50 C60 20 95 60 100 100 Z" fill="#40916c" opacity="0.9"/>
+                                            <path d="M100 100 C70 60 70 20 100 10 C130 20 130 60 100 100 Z" fill="#2d6a4f"/>
+                                            <path d="M100 130 C160 120 180 80 160 50 C140 20 105 60 100 100 Z" fill="#40916c" opacity="0.9"/>
+                                            {% if disease_key != 'Healthy' %}
+                                            <circle cx="95" cy="45" r="5" fill="#6b1d1d"/>
+                                            <circle cx="108" cy="65" r="6" fill="#781d1d"/>
+                                            <circle cx="60" cy="70" r="5" fill="#581616"/>
+                                            <circle cx="140" cy="75" r="4.5" fill="#6b1d1d"/>
+                                            {% endif %}
+                                        </svg>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <span class="xai-meta-text">Original high-res input</span>
+                        </div>
+
+                        <!-- Grad-CAM Heatmap Layer -->
+                        <div class="xai-view-box">
+                            <span class="xai-view-tag tag-heatmap">Grad-CAM Saliency Overlay</span>
+                            <div class="xai-img-wrapper heatmap-wrapper">
+                                <div class="sample-leaf-graphic heatmap-overlay">
+                                    <svg viewBox="0 0 200 200" class="graphic-svg">
+                                        <path d="M100 130 C40 120 20 80 40 50 C60 20 95 60 100 100 Z" fill="#1b4332" opacity="0.75"/>
+                                        <path d="M100 100 C70 60 70 20 100 10 C130 20 130 60 100 100 Z" fill="#1b4332" opacity="0.85"/>
+                                        <path d="M100 130 C160 120 180 80 160 50 C140 20 105 60 100 100 Z" fill="#1b4332" opacity="0.75"/>
+                                        {% if disease_key != 'Healthy' %}
+                                        <!-- Jet Colormap Hotspots -->
+                                        <circle cx="95" cy="45" r="22" fill="url(#resGradRed)" opacity="0.9"/>
+                                        <circle cx="108" cy="65" r="26" fill="url(#resGradRed)" opacity="0.95"/>
+                                        <circle cx="60" cy="70" r="20" fill="url(#resGradAmber)" opacity="0.85"/>
+                                        <circle cx="140" cy="75" r="18" fill="url(#resGradAmber)" opacity="0.8"/>
+                                        {% else %}
+                                        <!-- Uniform cool activation for healthy foliage -->
+                                        <circle cx="100" cy="100" r="45" fill="url(#resGradGreen)" opacity="0.4"/>
+                                        {% endif %}
+                                        
+                                        <defs>
+                                            <radialGradient id="resGradRed">
+                                                <stop offset="0%" stop-color="#ff0000" stop-opacity="1"/>
+                                                <stop offset="50%" stop-color="#ff7700" stop-opacity="0.8"/>
+                                                <stop offset="100%" stop-color="#0022cc" stop-opacity="0"/>
+                                            </radialGradient>
+                                            <radialGradient id="resGradAmber">
+                                                <stop offset="0%" stop-color="#ff5500" stop-opacity="1"/>
+                                                <stop offset="60%" stop-color="#ffcc00" stop-opacity="0.75"/>
+                                                <stop offset="100%" stop-color="#0022cc" stop-opacity="0"/>
+                                            </radialGradient>
+                                            <radialGradient id="resGradGreen">
+                                                <stop offset="0%" stop-color="#52b788" stop-opacity="0.8"/>
+                                                <stop offset="100%" stop-color="#1b4332" stop-opacity="0"/>
+                                            </radialGradient>
+                                        </defs>
+                                    </svg>
+                                </div>
+                            </div>
+                            <span class="xai-meta-text">Target: ResNet9-SE Stage 3 Conv2d</span>
+                        </div>
+
+                    </div>
+
+                    <!-- Heatmap Colorbar Legend -->
+                    <div class="heatmap-legend">
+                        <span class="legend-label">Low Attention (Background)</span>
+                        <div class="colorbar"></div>
+                        <span class="legend-label">High Attention (Lesion Focus)</span>
+                    </div>
+
+                    <!-- Interpretability Explanation -->
+                    <div class="xai-explanation-note">
+                        <p>
+                            <strong>How Grad-CAM Works:</strong>
+                            Gradient-weighted Class Activation Mapping calculates the gradients of the predicted class score with respect to the final convolutional feature maps in ResNet9-SE (Stage 3). 
+                            Warm colors (red/orange) highlight the precise leaf lesions that triggered the neural network's classification.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Predicted Class, Confidence & Agronomic Advisory -->
+            <div class="results-card diagnosis-details-card">
+                
+                <!-- Diagnosis Header -->
+                <div class="diagnosis-header">
+                    <div>
+                        <span class="diagnosis-sub">Classification Result (Layout Preview)</span>
+                        <h2 class="diagnosis-title">{{ data.disease_name }}</h2>
+                        <span class="scientific-title"><em>{{ data.scientific_name }}</em></span>
+                    </div>
+                    <div class="diagnosis-badge-wrap">
+                        {% if disease_key == 'Healthy' %}
+                            <span class="status-badge badge-healthy">Foliage Clean &bull; No Pathogen</span>
+                        {% else %}
+                            <span class="status-badge badge-infected">Pathogen Detected &bull; {{ data.severity }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Confidence Gauge & Metrics -->
+                <div class="confidence-container">
+                    <div class="confidence-header">
+                        <span class="conf-label">Predicted Model Confidence</span>
+                        <span class="conf-value">{{ data.confidence }}%</span>
+                    </div>
+                    <div class="progress-bar-wrap">
+                        <div class="progress-bar-fill {% if disease_key == 'Healthy' %}bg-success{% else %}bg-accent{% endif %}" 
+                             style="width: {{ data.confidence }}%;"></div>
+                    </div>
+                    <div class="conf-footer">
+                        <span>Architecture: <strong>{{ data.model_architecture }}</strong></span>
+                        <span>Attention: <strong>Squeeze &amp; Excitation</strong></span>
+                    </div>
+                </div>
+
+                <!-- Class Probability Breakdown -->
+                <div class="probabilities-section">
+                    <h4 class="section-mini-heading">Target Class Probability Distribution</h4>
+                    <div class="prob-list">
+                        {% for class_name, prob in data.all_probabilities.items() %}
+                        <div class="prob-item">
+                            <div class="prob-labels">
+                                <span class="prob-name">{{ class_name }}</span>
+                                <span class="prob-val">{{ prob }}%</span>
+                            </div>
+                            <div class="mini-bar-wrap">
+                                <div class="mini-bar-fill {% if class_name == disease_key %}active-fill{% endif %}" style="width: {{ prob }}%;"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Pathogen Pathology Summary -->
+                <div class="pathology-summary">
+                    <h4 class="section-mini-heading">Pathological Overview</h4>
+                    <p class="pathology-desc">{{ data.description }}</p>
+
+                    <div class="symptoms-block">
+                        <strong>Key Identifying Symptoms:</strong>
+                        <ul class="symptom-list">
+                            {% for sym in data.symptoms %}
+                            <li>{{ sym }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Agronomic Recommendations -->
+                <div class="advisory-card">
+                    <div class="advisory-header">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                        </svg>
+                        <h4>Recommended Agronomic Next Steps</h4>
+                    </div>
+                    <ul class="advisory-list">
+                        {% for rec in data.recommendations %}
+                        <li>
+                            <span class="advisory-bullet">&bull;</span>
+                            <span>{{ rec }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- Navigation Controls -->
+                <div class="results-nav-footer">
+                    <a href="{{ url_for('detect_page') }}" class="btn btn-primary">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                            <circle cx="12" cy="13" r="4"/>
+                        </svg>
+                        <span>Analyse Another Leaf</span>
+                    </a>
+                    <a href="{{ url_for('environment_page') }}" class="btn btn-outline">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                        </svg>
+                        <span>Check Environmental Risk</span>
+                    </a>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}

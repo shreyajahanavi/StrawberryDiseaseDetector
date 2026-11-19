@@ -1,0 +1,249 @@
+{% extends "base.html" %}
+
+{% block title %}Environmental Microclimate Risk | BerryGuard AI{% endblock %}
+
+{% block content %}
+<div class="env-page-wrapper">
+    <div class="container">
+        
+        <!-- Page Title Header -->
+        <div class="page-header text-center">
+            <span class="sub-heading">Microclimate Triangulation</span>
+            <h1 class="page-title">Environmental Disease Risk Assessment</h1>
+            <p class="page-lead">
+                Foliar strawberry pathogens require specific microclimate conditions to sporulate and infect plant tissue.
+                This module models the <strong>Agricultural Disease Triangle</strong> (Host + Pathogen + Environment) using temperature and relative humidity telemetry.
+            </p>
+        </div>
+
+        <!-- Telemetry Source Status Banner -->
+        <div class="telemetry-banner">
+            <div class="telemetry-source-status">
+                <span class="sensor-pulse-dot {% if sensor_data.is_live_telemetry %}live-online{% else %}sim-mode{% endif %}"></span>
+                <span class="telemetry-source-title">
+                    Telemetry Ingestion Status: 
+                    <strong>
+                        {% if sensor_data.is_live_telemetry %}
+                            Live Telemetry Received from Node {{ sensor_data.device_id }}
+                        {% else %}
+                            Ready for ESP32 + DHT22 Hardware Telemetry
+                        {% endif %}
+                    </strong>
+                </span>
+            </div>
+            <div class="telemetry-meta">
+                <span>Last Telemetry Update: <strong>{{ sensor_data.last_updated }}</strong></span>
+                <span>Ingestion Endpoint: <code>POST /api/environment/sensor-data</code></span>
+            </div>
+        </div>
+
+        <!-- Environmental Risk Assessment Grid -->
+        <div class="env-grid mt-4">
+            
+            <!-- Left: Microclimate Risk Dashboard & Interactive Simulator -->
+            <div class="env-card">
+                <div class="env-card-header">
+                    <h3 class="card-headline">Microclimate Telemetry & Risk Index</h3>
+                    <span class="risk-badge risk-{{ risk_data.risk_color }}">
+                        {{ risk_data.risk_level }} Risk ({{ risk_data.risk_score }}%)
+                    </span>
+                </div>
+
+                <!-- Two Metric Gauges (Temperature & Humidity) -->
+                <div class="sensor-gauges-grid">
+                    
+                    <!-- Temperature Card -->
+                    <div class="gauge-card">
+                        <div class="gauge-header">
+                            <span class="gauge-label">Ambient Temperature</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2">
+                                <path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/>
+                            </svg>
+                        </div>
+                        <div class="gauge-reading">
+                            <span class="gauge-num" id="tempDisplay">{{ risk_data.temperature }}</span>
+                            <span class="gauge-unit">&deg;C</span>
+                        </div>
+                        <p class="gauge-range-note">Foliar fungal growth band: 15&deg;C &ndash; 28&deg;C</p>
+                    </div>
+
+                    <!-- Humidity Card -->
+                    <div class="gauge-card">
+                        <div class="gauge-header">
+                            <span class="gauge-label">Relative Humidity (RH)</span>
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2">
+                                <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+                            </svg>
+                        </div>
+                        <div class="gauge-reading">
+                            <span class="gauge-num" id="humDisplay">{{ risk_data.humidity }}</span>
+                            <span class="gauge-unit">%</span>
+                        </div>
+                        <p class="gauge-range-note">Critical spore germination threshold: &ge; 75%</p>
+                    </div>
+
+                </div>
+
+                <!-- Overall Risk Level Bar -->
+                <div class="risk-meter-container">
+                    <div class="risk-meter-labels">
+                        <span>Low Risk (&lt; 35%)</span>
+                        <span>Medium Risk (35% &ndash; 65%)</span>
+                        <span>High Risk (&gt; 65%)</span>
+                    </div>
+                    <div class="risk-meter-track">
+                        <div class="risk-meter-fill bg-{{ risk_data.risk_color }}" style="width: {{ risk_data.risk_score }}%;"></div>
+                    </div>
+                    <p class="risk-explanation mt-3">
+                        <strong>Microclimate Diagnosis:</strong> {{ risk_data.status_text }}
+                    </p>
+                    <div class="action-alert-box alert-{{ risk_data.risk_color }}">
+                        <strong>Agronomic Action:</strong> {{ risk_data.recommended_action }}
+                    </div>
+                </div>
+
+                <!-- Interactive Microclimate Simulator Controls -->
+                <div class="simulator-box mt-4">
+                    <div class="simulator-header">
+                        <h4>Interactive Microclimate Simulation</h4>
+                        <span class="simulator-sub">Adjust values to calculate disease risk for different field climates</span>
+                    </div>
+                    
+                    <form id="simForm" method="GET" action="{{ url_for('environment_page') }}" class="sim-form">
+                        <div class="sim-slider-group">
+                            <div class="slider-label-row">
+                                <label for="tempInput">Simulate Temperature (&deg;C):</label>
+                                <span class="slider-val" id="tempSliderVal">{{ risk_data.temperature }}&deg;C</span>
+                            </div>
+                            <input type="range" id="tempInput" name="temp" min="10" max="40" step="0.5" value="{{ risk_data.temperature }}" class="range-slider">
+                        </div>
+
+                        <div class="sim-slider-group mt-3">
+                            <div class="slider-label-row">
+                                <label for="humInput">Simulate Humidity (%):</label>
+                                <span class="slider-val" id="humSliderVal">{{ risk_data.humidity }}%</span>
+                            </div>
+                            <input type="range" id="humInput" name="hum" min="20" max="100" step="1" value="{{ risk_data.humidity }}" class="range-slider">
+                        </div>
+
+                        <div class="sim-actions mt-3">
+                            <button type="submit" class="btn btn-primary btn-sm">
+                                Compute Risk Level
+                            </button>
+                            <a href="{{ url_for('environment_page') }}" class="btn btn-outline btn-sm">
+                                Reset to Default
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Right: Pathogen Susceptibility Matrix & IoT ESP32 Documentation -->
+            <div class="env-card">
+                <div class="env-card-header">
+                    <h3 class="card-headline">Pathogen Microclimate Matrix</h3>
+                    <span class="xai-chip">Disease Triangle Analysis</span>
+                </div>
+
+                <!-- Pathogen Breakdown List -->
+                <div class="pathogen-breakdown-list">
+                    {% for p_name, p_risk in risk_data.pathogen_breakdown.items() %}
+                    <div class="pathogen-risk-item">
+                        <div class="pathogen-risk-labels">
+                            <span class="pathogen-risk-name">{{ p_name }}</span>
+                            <span class="pathogen-risk-val">{{ p_risk }}</span>
+                        </div>
+                        <div class="mini-bar-wrap">
+                            <div class="mini-bar-fill {% if 'High' in risk_data.risk_level %}active-danger{% else %}active-fill{% endif %}" 
+                                 style="width: {{ p_risk }};"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- Active Biological Triggers -->
+                <div class="triggers-box mt-3">
+                    <h4 class="section-mini-heading">Active Microclimate Triggers:</h4>
+                    <ul class="triggers-list">
+                        {% for trigger in risk_data.active_triggers %}
+                        <li>{{ trigger }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <!-- ESP32 + DHT22 Hardware Integration Guide -->
+                <div class="iot-guide-card mt-4">
+                    <div class="iot-guide-header">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2d6a4f" stroke-width="2">
+                            <rect x="4" y="4" width="16" height="16" rx="2" ry="2"/>
+                            <rect x="9" y="9" width="6" height="6"/>
+                            <line x1="9" y1="1" x2="9" y2="4"/>
+                            <line x1="15" y1="1" x2="15" y2="4"/>
+                            <line x1="9" y1="20" x2="9" y2="23"/>
+                            <line x1="15" y1="20" x2="15" y2="23"/>
+                            <line x1="20" y1="9" x2="23" y2="9"/>
+                            <line x1="20" y1="14" x2="23" y2="14"/>
+                            <line x1="1" y1="9" x2="4" y2="9"/>
+                            <line x1="1" y1="14" x2="4" y2="14"/>
+                        </svg>
+                        <h4>ESP32 &plus; DHT22 IoT Ingestion Architecture</h4>
+                    </div>
+                    <p class="iot-desc">
+                        To stream live field weather data into this dashboard, configure an ESP32 microcontroller with a DHT22 sensor to transmit HTTP POST requests over Wi-Fi.
+                    </p>
+
+                    <!-- Code Snippet -->
+                    <div class="code-block-wrap">
+                        <div class="code-header">
+                            <span>ESP32 Arduino C++ Payload Structure</span>
+                            <span class="code-badge">HTTP POST</span>
+                        </div>
+                        <pre class="code-content"><code>// HTTP POST to /api/environment/sensor-data
+HTTPClient http;
+http.begin("http://&lt;SERVER_IP&gt;:5000/api/environment/sensor-data");
+http.addHeader("Content-Type", "application/json");
+
+String payload = "{\"temperature\": " + String(dht.readTemperature()) + 
+                 ", \"humidity\": " + String(dht.readHumidity()) + 
+                 ", \"device_id\": \"ESP32_FIELD_NODE_01\"}";
+
+int httpCode = http.POST(payload);
+http.end();</code></pre>
+                    </div>
+
+                    <div class="api-callout">
+                        <span>API Route: <code>POST /api/environment/sensor-data</code></span>
+                        <span>Accepted MIME: <code>application/json</code></span>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Live slider updates for the simulation form
+    const tempInput = document.getElementById('tempInput');
+    const humInput = document.getElementById('humInput');
+    const tempVal = document.getElementById('tempSliderVal');
+    const humVal = document.getElementById('humSliderVal');
+
+    if (tempInput && tempVal) {
+        tempInput.addEventListener('input', (e) => {
+            tempVal.textContent = e.target.value + '°C';
+        });
+    }
+
+    if (humInput && humVal) {
+        humInput.addEventListener('input', (e) => {
+            humVal.textContent = e.target.value + '%';
+        });
+    }
+</script>
+{% endblock %}
